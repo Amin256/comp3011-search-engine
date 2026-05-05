@@ -1,7 +1,7 @@
 import json
 from collections import defaultdict
 from pathlib import Path
-from utils import tokenise
+from src.utils import tokenise
 
 INDEX_FILE = "data/index.json"
 
