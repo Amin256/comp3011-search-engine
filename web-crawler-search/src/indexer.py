@@ -1,14 +1,9 @@
 import json
-import re
 from collections import defaultdict
 from pathlib import Path
+from utils import tokenise
 
 INDEX_FILE = "data/index.json"
-
-# Convert text into lowercase word tokens
-def tokenize(text):
-    text = text.lower()
-    return re.findall(r"[a-z0-9]+", text)
 
 class Indexer:
     # Creates and stores an inverted index
@@ -17,7 +12,7 @@ class Indexer:
 
     # Add one crawled page to the inverted index
     def add_page(self, page):
-        tokens = tokenize(page.text)
+        tokens = tokenise(page.text)
 
         for position, word in enumerate(tokens):
             if page.url not in self.index[word]:
