@@ -45,3 +45,36 @@ def test_indexer_multiple_pages_same_word():
     index = indexer.build_index([page1, page2])
     assert index["love"]["page1"]["frequency"] == 1
     assert index["love"]["page2"]["frequency"] == 2
+    
+def test_tokenise_keeps_numbers():
+    tokens = tokenise("Quote number 123 is here")
+
+    assert "123" in tokens
+
+def test_tokenise_removes_punctuation():
+    tokens = tokenise("Hello!!! Are you there???")
+
+    assert tokens == ["hello", "are", "you", "there"]
+
+def test_indexer_case_insensitive():
+    page = CrawledPage(url = "page1", title = "Page 1", text = "Love love LOVE")
+
+    indexer = Indexer()
+    index = indexer.build_index([page])
+
+    assert index["love"]["page1"]["frequency"] == 3
+
+def test_save_and_load_index(tmp_path):
+    page = CrawledPage(url = "page1", title = "Page 1", text = "love wisdom")
+    file_path = tmp_path / "test_index.json"
+
+    indexer = Indexer()
+    indexer.build_index([page])
+    indexer.save_index(file_path)
+
+    new_indexer = Indexer()
+    loaded_index = new_indexer.load_index(file_path)
+
+    assert "love" in loaded_index
+    assert "wisdom" in loaded_index
+    assert loaded_index["love"]["page1"]["frequency"] == 1

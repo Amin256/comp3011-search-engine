@@ -87,3 +87,38 @@ def test_find_query_with_extra_spaces():
     results = search_engine.find("   love   ")
     assert len(results) == 1
     assert results[0]["url"] == "page2"
+    
+def test_find_empty_index():
+    search_engine = SearchEngine({})
+    results = search_engine.find("love")
+    assert results == []
+
+def test_print_empty_index():
+    search_engine = SearchEngine({})
+    result = search_engine.print_word("love")
+    assert result == "No results found for 'love'."
+
+def test_find_repeated_query_terms():
+    search_engine = SearchEngine(sample_index())
+    results = search_engine.find("love love")
+    assert len(results) == 1
+    assert results[0]["url"] == "page2"
+
+def test_get_all_pages():
+    search_engine = SearchEngine(sample_index())
+    pages = search_engine.get_all_pages()
+    assert "page1" in pages
+    assert "page2" in pages
+    assert "page3" in pages
+
+
+def test_calculate_idf_known_word():
+    search_engine = SearchEngine(sample_index())
+    idf = search_engine.calculate_idf("love")
+    assert idf > 0
+
+
+def test_calculate_idf_unknown_word():
+    search_engine = SearchEngine(sample_index())
+    idf = search_engine.calculate_idf("unknown")
+    assert idf == 0
