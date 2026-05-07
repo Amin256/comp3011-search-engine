@@ -1,6 +1,6 @@
-from crawler import Crawler
-from indexer import Indexer
-from search import SearchEngine
+from src.crawler import Crawler
+from src.indexer import Indexer
+from src.search import SearchEngine
 
 def show_help():
     print("\nAvailable commands:")
